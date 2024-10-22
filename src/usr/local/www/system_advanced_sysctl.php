@@ -69,6 +69,12 @@ function system_get_sysctls() {
 		$disp_sysctl[$sysctl] = array('tunable' => $sysctl, 'value' => $value, 'descr' => get_sysctl_descr($sysctl));
 	}
 	unset($disp_cache);
+
+	//sort by tunable names initially
+	uksort($disp_sysctl, function($key1, $key2) {
+		return strcmp($key1, $key2);
+	});
+
 	return $disp_sysctl;
 }
 
@@ -155,7 +161,7 @@ if ($act != "edit"): ?>
 	</div>
 	<div class="panel-body">
 		<div class="form-group">
-			<table class="table table-responsive table-hover table-condensed">
+			<table class="table table-responsive table-hover table-condensed" data-sortable>
 				<caption><strong><?=gettext('NOTE: '); ?></strong><?=gettext('The options on this page are intended for use by advanced users only.'); ?></caption>
 				<thead>
 					<tr>

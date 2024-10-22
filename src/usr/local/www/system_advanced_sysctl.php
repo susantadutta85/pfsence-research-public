@@ -35,9 +35,44 @@
 
 require_once("guiconfig.inc");
 require_once("pfsense-utils.inc");
-require_once("system_advanced_sysctl.inc");
 
-$tunables = getTunables();
+function get_default_sysctl_value($id) {
+	global $sysctls;
+
+	if (isset($sysctls[$id])) {
+		return $sysctls[$id];
+	}
+}
+
+function system_get_sysctls() {
+	global $sysctls;
+
+	$disp_sysctl = array();
+	$disp_cache = array();
+	foreach (config_get_path('sysctl/item', []) as $id => $tunable) {
+		if ($tunable['value'] == "default") {
+			$value = get_default_sysctl_value($tunable['tunable']);
+		} else {
+			$value = $tunable['value'];
+		}
+
+		$disp_sysctl[$id] = $tunable;
+		$disp_sysctl[$id]['modified'] = true;
+		$disp_cache[$tunable['tunable']] = 'set';
+	}
+
+	foreach ($sysctls as $sysctl => $value) {
+		if (isset($disp_cache[$sysctl])) {
+			continue;
+		}
+
+		$disp_sysctl[$sysctl] = array('tunable' => $sysctl, 'value' => $value, 'descr' => get_sysctl_descr($sysctl));
+	}
+	unset($disp_cache);
+	return $disp_sysctl;
+}
+
+$tunables = system_get_sysctls();
 
 if (isset($_REQUEST['id']) && is_numericint($_REQUEST['id'])) {
 	$id = htmlspecialchars_decode($_REQUEST['id']);

@@ -16,11 +16,11 @@ jobs:
         
 
      ##OPENSSF
-      - name: "Run analysis"
-        uses: ossf/scorecard-action@0864cf19026789058feabb7e87baa5f140aac736 # v2.3.1
-        with:
-          results_file: openssf.sarif
-          results_format: sarif
+      #- name: "Run analysis"
+      #  uses: ossf/scorecard-action@0864cf19026789058feabb7e87baa5f140aac736 # v2.3.1
+      #  with:
+      #    results_file: openssf.sarif
+      #    results_format: sarif
           # Public repositories:
           #   - Publish results to OpenSSF REST API for easy access by consumers
           #   - Allows the repository to include the Scorecard badge.
@@ -28,45 +28,68 @@ jobs:
           # For private repositories:
           #   - `publish_results` will always be set to `false`, regardless
           #     of the value entered here.
-          publish_results: false
-          
-      - name: cat openssf.sarif
-        run: |
-           cat openssf.sarif
-        shell: bash
+      #    publish_results: false
+      #    
+      #- name: cat openssf.sarif
+      #  run: |
+      #     cat openssf.sarif
+      #  shell: bash
       
       # Upload the results to GitHub's code scanning dashboard (optional).
       # Commenting out will disable upload of results to your repo's Code Scanning dashboard
-      - name: "Upload to code-scanning"
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: openssf.sarif
-
-      ##Snyk scan
-      #- name: "SNYK scan"
-      #  uses: snyk/actions/php@master
-      #  continue-on-error: true # To make sure that SARIF upload gets called
-      #  env:
-      #    SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      #  with:
-      #    args: --sarif-file-output=snyk.sarif
-          
-      #- name: Upload result to GitHub Code Scanning
+      #- name: "Upload to code-scanning"
       #  uses: github/codeql-action/upload-sarif@v3
       #  with:
-      #    sarif_file: snyk.sarif
+      #    sarif_file: openssf.sarif
+
+      ##Snyk scan
+      - name: "SNYK scan"
+        uses: snyk/actions/php@master
+        continue-on-error: true # To make sure that SARIF upload gets called
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --sarif-file-output=snyk.sarif
+
+      - name: cat openssf.sarif
+        run: |
+           cat snyk.sarif
+        shell: bash    
+          
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk.sarif
 
 
       ##Pysa scan - Python Static Analyzer (Pysa)
-      #- name: Run Pysa
-      #  uses: facebook/pysa-action@f46a63777e59268613bd6e2ff4e29f144ca9e88b
-      #  with:
+      
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+           python-version: 3.8
+      - name: Install dependencies
+        run: |
+           python -m pip install --upgrade pip
+      - name: generate requirement.txt file
+        run: |
+           pip freeze > requirements.txt
+        shell: bash 
+
+      - name: cat requirements.txt
+        run: |
+           cat requirements.txt
+        shell: bash      
+      
+      - name: Run Pysa
+        uses: facebook/pysa-action@f46a63777e59268613bd6e2ff4e29f144ca9e88b
+        with:
           # To customize these inputs:
           # See https://github.com/facebook/pysa-action#inputs
-      #    repo-directory: './'
-      #    requirements-path: 'requirements.txt'
-      #    infer-types: true
-      #    include-default-sapp-filters: true
+          repo-directory: './'
+          requirements-path: 'requirements.txt'
+          infer-types: true
+          include-default-sapp-filters: true
 
       ## Bandit scan
       #- name: Bandit Scan

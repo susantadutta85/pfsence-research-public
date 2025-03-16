@@ -75,7 +75,7 @@ jobs:
         shell: bash 
         
       - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: snyk-python.sarif    
 
@@ -99,15 +99,15 @@ jobs:
            cat requirements.txt
         shell: bash      
       
-      #- name: Run Pysa
-      #  uses: facebook/pysa-action@f46a63777e59268613bd6e2ff4e29f144ca9e88b
-      #  with:
+      - name: Run Pysa
+        uses: facebook/pysa-action@f46a63777e59268613bd6e2ff4e29f144ca9e88b
+        with:
           # To customize these inputs:
           # See https://github.com/facebook/pysa-action#inputs
-      #    repo-directory: './'
-      #    requirements-path: 'requirements.txt'
-      #    infer-types: true
-      #    include-default-sapp-filters: true
+          repo-directory: './'
+          requirements-path: 'requirements.txt'
+          infer-types: true
+          include-default-sapp-filters: true
 
       ## Bandit scan
       #- name: Bandit Scan

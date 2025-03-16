@@ -9,8 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: Run Snyk to check for vulnerabilities
-
+      
      ## Install dependencies
       - name: Install JavaScript libraries
         run: npm install

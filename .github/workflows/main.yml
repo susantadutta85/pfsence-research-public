@@ -50,6 +50,7 @@ jobs:
           sarif_file: openssf.sarif
 
       ##Snyk scan
+      - name: "SNYK scan"
         uses: snyk/actions/php@master
         continue-on-error: true # To make sure that SARIF upload gets called
         env:

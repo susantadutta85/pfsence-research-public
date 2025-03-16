@@ -60,7 +60,11 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: snyk-php.sarif
-
+          
+  security_scanning-python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/python-3.6@master
         continue-on-error: true # To make sure that SARIF upload gets called
@@ -106,7 +110,10 @@ jobs:
           # exit with 0, even with results found
           exit_zero: true # optional, default is DEFAULT
 
-
+  security_scanning-PMD:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
       ## PMD scan
       - name: Run PMD
         id: pmd
@@ -121,7 +128,10 @@ jobs:
         with:
           sarif_file: pmd-report.sarif
 
-
+  security_scanning-ESlinter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
       ## ES linter 
       - name: Install ESLint
         run: |
@@ -144,7 +154,10 @@ jobs:
           sarif_file: eslint-results.sarif
           wait-for-processing: true
 
-
+  security_scanning-ossar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
       # Run open source static analysis tools
       - name: Run OSSAR
         uses: github/ossar-action@v1
@@ -155,6 +168,10 @@ jobs:
         with:
             sarif_file: ${{ steps.ossar.outputs.sarifFile }}
 
+  security_scanning-psalm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
       ## Psalm security scan
       - name: Psalm Security Scan
         uses: psalm/psalm-github-security-scan@f3e6fd9432bc3e44aec078572677ce9d2ef9c287
@@ -164,6 +181,10 @@ jobs:
         with:
           sarif_file: results.sarif
 
+  security_scanning-devskim:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
       ## DevSkim Scan
       - name: Run DevSkim scanner
         uses: microsoft/DevSkim-Action@v1

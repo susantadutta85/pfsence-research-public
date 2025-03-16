@@ -11,8 +11,8 @@ jobs:
       - uses: actions/checkout@master
       
      ## Install dependencies
-      - name: Install JavaScript libraries
-        run: npm install
+     # - name: Install JavaScript libraries
+     #   run: npm install
         
 
      ##OPENSSF

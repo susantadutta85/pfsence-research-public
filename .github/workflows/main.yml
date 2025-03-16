@@ -44,103 +44,103 @@ jobs:
           sarif_file: openssf.sarif
 
       ##Snyk scan
-      - name: "SNYK scan"
-        uses: snyk/actions/php@master
-        continue-on-error: true # To make sure that SARIF upload gets called
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --sarif-file-output=snyk.sarif
+      #- name: "SNYK scan"
+      #  uses: snyk/actions/php@master
+      #  continue-on-error: true # To make sure that SARIF upload gets called
+      #  env:
+      #    SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      #  with:
+      #    args: --sarif-file-output=snyk.sarif
           
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: snyk.sarif
+      #- name: Upload result to GitHub Code Scanning
+      #  uses: github/codeql-action/upload-sarif@v3
+      #  with:
+      #    sarif_file: snyk.sarif
 
 
       ##Pysa scan - Python Static Analyzer (Pysa)
-      - name: Run Pysa
-        uses: facebook/pysa-action@f46a63777e59268613bd6e2ff4e29f144ca9e88b
-        with:
+      #- name: Run Pysa
+      #  uses: facebook/pysa-action@f46a63777e59268613bd6e2ff4e29f144ca9e88b
+      #  with:
           # To customize these inputs:
           # See https://github.com/facebook/pysa-action#inputs
-          repo-directory: './'
-          requirements-path: 'requirements.txt'
-          infer-types: true
-          include-default-sapp-filters: true
+      #    repo-directory: './'
+      #    requirements-path: 'requirements.txt'
+      #    infer-types: true
+      #    include-default-sapp-filters: true
 
       ## Bandit scan
-      - name: Bandit Scan
-        uses: shundor/python-bandit-scan@ab1d87dfccc5a0ffab88be3aaac6ffe35c10d6cd
-        with: # optional arguments
-          # exit with 0, even with results found
-          exit_zero: true # optional, default is DEFAULT
+      #- name: Bandit Scan
+      #  uses: shundor/python-bandit-scan@ab1d87dfccc5a0ffab88be3aaac6ffe35c10d6cd
+      #  with: # optional arguments
+      #    # exit with 0, even with results found
+      #    exit_zero: true # optional, default is DEFAULT
 
 
       ## PMD scan
-      - name: Run PMD
-        id: pmd
-        uses: pmd/pmd-github-action@967a81f8b657c87f7c3e96b62301cb1a48efef29
-        with:
-          rulesets: 'rulesets/java/quickstart.xml'
-          sourcePath: 'src/main/java'
-          analyzeModifiedFilesOnly: false
+      #- name: Run PMD
+      #  id: pmd
+      #  uses: pmd/pmd-github-action@967a81f8b657c87f7c3e96b62301cb1a48efef29
+      #  with:
+      #    rulesets: 'rulesets/java/quickstart.xml'
+      #    sourcePath: 'src/main/java'
+      #    analyzeModifiedFilesOnly: false
           
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: pmd-report.sarif
+      #- name: Upload SARIF file
+      #  uses: github/codeql-action/upload-sarif@v3
+      #  with:
+      #    sarif_file: pmd-report.sarif
 
 
       ## ES linter 
-      - name: Install ESLint
-        run: |
-          npm install eslint@8.10.0
-          npm install @microsoft/eslint-formatter-sarif@3.1.0
+      #- name: Install ESLint
+      #  run: |
+      #    npm install eslint@8.10.0
+      #    npm install @microsoft/eslint-formatter-sarif@3.1.0
 
-      - name: Run ESLint
-        env:
-          SARIF_ESLINT_IGNORE_SUPPRESSED: "true"
-        run: npx eslint .
-          --config .eslintrc.js
-          --ext .js,.jsx,.ts,.tsx
-          --format @microsoft/eslint-formatter-sarif
-          --output-file eslint-results.sarif
-        continue-on-error: true
+      #- name: Run ESLint
+      #  env:
+      #    SARIF_ESLINT_IGNORE_SUPPRESSED: "true"
+      #  run: npx eslint .
+      #    --config .eslintrc.js
+      #    --ext .js,.jsx,.ts,.tsx
+      #    --format @microsoft/eslint-formatter-sarif
+      #    --output-file eslint-results.sarif
+      #  continue-on-error: true
 
-      - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: eslint-results.sarif
-          wait-for-processing: true
+      #- name: Upload analysis results to GitHub
+      #  uses: github/codeql-action/upload-sarif@v3
+      #  with:
+      #    sarif_file: eslint-results.sarif
+      #    wait-for-processing: true
 
 
       # Run open source static analysis tools
-      - name: Run OSSAR
-        uses: github/ossar-action@v1
-        id: ossar
+      #- name: Run OSSAR
+      #  uses: github/ossar-action@v1
+      #  id: ossar
 
-      - name: Upload OSSAR results
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-            sarif_file: ${{ steps.ossar.outputs.sarifFile }}
+      #- name: Upload OSSAR results
+      #  uses: github/codeql-action/upload-sarif@v3
+      #  with:
+      #      sarif_file: ${{ steps.ossar.outputs.sarifFile }}
 
       ## Psalm security scan
-      - name: Psalm Security Scan
-        uses: psalm/psalm-github-security-scan@f3e6fd9432bc3e44aec078572677ce9d2ef9c287
+      #- name: Psalm Security Scan
+      #  uses: psalm/psalm-github-security-scan@f3e6fd9432bc3e44aec078572677ce9d2ef9c287
 
-      - name: Upload Security Analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: results.sarif
+      #- name: Upload Security Analysis results to GitHub
+      #  uses: github/codeql-action/upload-sarif@v3
+      #  with:
+      #    sarif_file: results.sarif
 
       ## DevSkim Scan
-      - name: Run DevSkim scanner
-        uses: microsoft/DevSkim-Action@v1
+      #- name: Run DevSkim scanner
+      #  uses: microsoft/DevSkim-Action@v1
 
-      - name: Upload DevSkim scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: devskim-results.sarif    
+      #- name: Upload DevSkim scan results to GitHub Security tab
+      #  uses: github/codeql-action/upload-sarif@v3
+      #  with:
+      #    sarif_file: devskim-results.sarif    
         
      

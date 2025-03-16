@@ -29,7 +29,12 @@ jobs:
           #   - `publish_results` will always be set to `false`, regardless
           #     of the value entered here.
           publish_results: false
-
+          
+      - name: cat openssf.sarif
+        run: |
+           cat openssf.sarif
+        shell: bash
+      
       # Upload the results to GitHub's code scanning dashboard (optional).
       # Commenting out will disable upload of results to your repo's Code Scanning dashboard
       - name: "Upload to code-scanning"
